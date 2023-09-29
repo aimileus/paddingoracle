@@ -6,7 +6,6 @@ from typing import Callable
 
 from paddingoracle.aes import valid_cipher, encrypt, pad, BLOCK_LENGTH
 
-
 def answer(oracle: Callable[[bytes], bool], conn: socket.socket):
     while True:
         raw_length = conn.recv(1)
