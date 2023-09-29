@@ -2,11 +2,13 @@ import os
 import socket
 import traceback
 from secrets import token_bytes
+from threading import Thread
 from typing import Callable
 
 from paddingoracle.aes import valid_cipher, encrypt, pad, BLOCK_LENGTH
 
-def answer(oracle: Callable[[bytes], bool], conn: socket.socket):
+
+def send_answer(conn: socket, oracle: Callable[[bytes], bool]):
     while True:
         raw_length = conn.recv(1)
         if not raw_length:
@@ -28,11 +30,18 @@ def answer(oracle: Callable[[bytes], bool], conn: socket.socket):
             conn.send(b"0\x00")
 
 
-def main():
-    k = read_key()
-
+def answer(k: bytes, conn: socket.socket):
     def oracle(c: bytes) -> bool:
         return valid_cipher(k, c)
+
+    try:
+        send_answer(conn, oracle)
+    finally:
+        conn.close()
+
+
+def main():
+    k = read_key()
 
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -47,14 +56,8 @@ def main():
     while True:
         conn, (addr, port) = soc.accept()
         print(f"Opened connection from {addr}")
-
-        # noinspection PyBroadException
-        try:
-            answer(oracle, conn)
-        except Exception:
-            traceback.print_exc()
-        finally:
-            conn.close()
+        t = Thread(target=answer, args=(k, conn))
+        t.start()
 
 
 def read_key():
