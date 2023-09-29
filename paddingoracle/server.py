@@ -4,7 +4,7 @@ import traceback
 from secrets import token_bytes
 from typing import Callable
 
-from aes import valid_cipher, encrypt, pad, BLOCK_LENGTH
+from paddingoracle.aes import valid_cipher, encrypt, pad, BLOCK_LENGTH
 
 
 def answer(oracle: Callable[[bytes], bool], conn: socket.socket):
