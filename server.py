@@ -7,7 +7,7 @@ from typing import Callable
 from aes import valid_cipher, encrypt, pad, BLOCK_LENGTH
 
 
-def answer(oracle: Callable[[bytes], bytes], conn: socket.socket):
+def answer(oracle: Callable[[bytes], bool], conn: socket.socket):
     while True:
         if not (raw_length := conn.recv(1)):
             return
@@ -31,7 +31,7 @@ def answer(oracle: Callable[[bytes], bytes], conn: socket.socket):
 def main():
     k = read_key()
 
-    def oracle(c):
+    def oracle(c: bytes) -> bool:
         return valid_cipher(k, c)
 
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -48,6 +48,7 @@ def main():
         conn, (addr, port) = soc.accept()
         print(f"Opened connection from {addr}")
 
+        # noinspection PyBroadException
         try:
             answer(oracle, conn)
         except Exception:

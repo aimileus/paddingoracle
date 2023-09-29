@@ -1,5 +1,4 @@
 from secrets import token_bytes
-from string import ascii_lowercase
 
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
