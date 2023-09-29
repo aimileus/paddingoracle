@@ -9,7 +9,8 @@ from paddingoracle.aes import valid_cipher, encrypt, pad, BLOCK_LENGTH
 
 def answer(oracle: Callable[[bytes], bool], conn: socket.socket):
     while True:
-        if not (raw_length := conn.recv(1)):
+        raw_length = conn.recv(1)
+        if not raw_length:
             return
 
         num_blocks = raw_length[0]
