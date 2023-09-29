@@ -6,6 +6,15 @@ ciphertexts.
 
 ## Installation
 
+### For nix users
+
+If you have nix installed (works on Linux and MacOs), just run:
+```
+nix run github:aimileus/paddingoracle
+```
+
+### For others
+
 Install the `paddingoracle` command using
 
 ```shell
