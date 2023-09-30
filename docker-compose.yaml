@@ -1,0 +1,7 @@
+services:
+  server:
+    build: .
+    environment:
+      MC_PADDING_KEY: ${MC_PADDING_KEY}
+    ports:
+      - "8080:8080"
