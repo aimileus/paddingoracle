@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 BLOCK_LENGTH = 16
+PADDER = padding.ANSIX923(BLOCK_LENGTH * 8)
 
 
 def cbc(key: bytes, iv: bytes) -> Cipher:
@@ -33,7 +34,7 @@ def encrypt(k: bytes, m: bytes):
 
 
 def pad(m: bytes):
-    padder = padding.PKCS7(BLOCK_LENGTH * 8).padder()
+    padder = PADDER.padder()
     return padder.update(m) + padder.finalize()
 
 
@@ -43,7 +44,7 @@ def valid_cipher(k: bytes, c: bytes) -> bool:
 
 
 def valid_padding(m: bytes) -> bool:
-    unpadder = padding.PKCS7(BLOCK_LENGTH * 8).unpadder()
+    unpadder = PADDER.unpadder()
 
     try:
         _unpadded = unpadder.update(m) + unpadder.finalize()

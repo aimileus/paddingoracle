@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-cryptography = "^40.0.2"
+cryptography = "^41.0.4"
 
 [tool.poetry.scripts]
 paddingoracle = "paddingoracle.server:wrapper"

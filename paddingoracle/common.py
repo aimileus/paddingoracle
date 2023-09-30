@@ -20,6 +20,7 @@ def read_key():
     message = os.environ.get("MC_PADDING_MESSAGE", None)
     if message:
         padded = pad(message.encode())
+        print("Padded message:", padded.hex())
         print("Encrypted message:", encrypt(k, padded).hex())
 
     return k
