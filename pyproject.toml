@@ -10,7 +10,7 @@ python = "^3.6"
 cryptography = "^40.0.2"
 
 [tool.poetry.scripts]
-paddingoracle = "paddingoracle.server:main"
+paddingoracle = "paddingoracle.server:wrapper"
 
 
 [build-system]
