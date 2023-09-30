@@ -50,10 +50,9 @@ async def main():
     ip = "0.0.0.0"
     port = 8080
 
-    s = await asyncio.start_server(cb, ip, port)
     print(f"Listening on {ip}:{port}")
 
-    async with s:
+    async with await asyncio.start_server(cb, ip, port) as s:
         await s.serve_forever()
 
 
