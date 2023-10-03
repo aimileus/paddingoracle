@@ -21,8 +21,8 @@ async def handle_oracle(oracle: Callable[[bytes], bool], reader: asyncio.StreamR
 
         try:
             c = await reader.readexactly(num_blocks * BLOCK_LENGTH + 1)
-        except asyncio.IncompleteReadError:
-            raise ValueError(f"{addr}: invalid number of blocks: {num_blocks}")
+        except asyncio.IncompleteReadError as e:
+            raise ValueError(f"{addr}: invalid number of blocks: {num_blocks}") from e
 
         if c[-1] != 0:
             raise ValueError(f"{addr}: message does not end with 0")
@@ -33,7 +33,10 @@ async def handle_oracle(oracle: Callable[[bytes], bool], reader: asyncio.StreamR
             ans = b"0\x00"
 
         writer.write(ans)
-        await writer.drain()
+        try:
+            await writer.drain()
+        except ConnectionResetError as e:
+            raise ValueError(f"Aborted connection from {addr}") from e
 
     print("Closing connection from", addr)
 
@@ -45,7 +48,10 @@ async def main():
         def oracle(c: bytes) -> bool:
             return valid_cipher(k, c)
 
-        await handle_oracle(oracle, reader, writer)
+        try:
+            await handle_oracle(oracle, reader, writer)
+        except ValueError as e:
+            print(e)
 
     ip = "0.0.0.0"
     port = 8080
