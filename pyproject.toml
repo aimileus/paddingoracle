@@ -6,7 +6,7 @@ authors = ["Emiel Wiedijk <13463911+aimileus@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.11"
 cryptography = "^41.0.4"
 
 [tool.poetry.scripts]
