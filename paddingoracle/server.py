@@ -23,6 +23,8 @@ async def handle_oracle(oracle: Callable[[bytes], bool], reader: asyncio.StreamR
             c = await reader.readexactly(num_blocks * BLOCK_LENGTH + 1)
         except asyncio.IncompleteReadError as e:
             raise ValueError(f"{addr}: invalid number of blocks: {num_blocks}") from e
+        except ConnectionResetError as e:
+            raise ValueError(f"Aborted connection from {addr}") from e
 
         if c[-1] != 0:
             raise ValueError(f"{addr}: message does not end with 0")
